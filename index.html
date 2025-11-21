@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium BeamMP</title>
+
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Half-and-half background */
+    .top-half {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 50%;
+        background-color: #ffffff; /* White top half */
+        z-index: -2;
+    }
+
+    .bottom-half {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 50%;
+        background-color: #FFA500; /* Orange bottom half */
+        z-index: -2;
+    }
+
+    /* Logo top-left */
+    .logo {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        width: 100px; /* bigger logo */
+        height: auto;
+        z-index: 2;
+    }
+
+    .wrapper {
+        width: 360px;
+        background: #fff;
+        padding: 25px;
+        border-radius: 20px;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+        z-index: 1;
+        position: relative;
+    }
+
+    h1 {
+        font-size: 22px;
+        margin-bottom: 10px;
+        color: #111;
+        text-align: center;
+    }
+
+    .sub {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #555;
+    }
+
+    .info-box {
+        background: #fffbe0;
+        border-radius: 12px;
+        padding: 15px;
+        font-size: 14px;
+        color: #444;
+    }
+
+    .apple-pay-btn {
+        background: #000;
+        color: #fff;
+        width: 100%;
+        padding: 14px;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin-top: 20px;
+        transition: background 0.2s;
+    }
+
+    .apple-pay-btn:hover {
+        background: #111;
+    }
+
+    .apple-logo {
+        width: 22px;
+        height: 22px;
+        background-image: url('https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .modal {
+        display: none; /* hidden initially */
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(4px);
+        z-index: 9999; /* on top of everything */
+    }
+
+    .modal-inner {
+        background: #fff;
+        width: 340px;
+        padding: 20px;
+        border-radius: 18px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        text-align: center;
+    }
+
+    .slide-bar {
+        background: #e5e5ea;
+        border-radius: 40px;
+        height: 50px;
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        margin-top: 18px;
+    }
+
+    .slider {
+        background: #000;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: left 0.25s ease-out;
+    }
+
+    .slide-text {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #6e6e73;
+        font-size: 15px;
+        pointer-events: none;
+    }
+
+    .success {
+        display: none;
+        font-size: 20px;
+        color: #0a8400;
+        font-weight: 600;
+        margin-top: 15px;
+    }
+</style>
+</head>
+<body>
+
+<!-- Top-left bigger logo -->
+<img src="https://image2url.com/images/1763756392536-13338915-3a19-44ac-977e-ae8a7708b9ce.jpg" alt="Logo" class="logo">
+
+<div class="top-half"></div>
+<div class="bottom-half"></div>
+
+<div class="wrapper">
+    <h1>Premium BeamMP</h1>
+    <p class="sub">$9.99 / month</p>
+
+    <div class="info-box">
+        • Access exclusive premium servers<br>
+        • Only play with other premium players<br>
+        • Priority server performance<br>
+        • Faster support
+    </div>
+
+    <button class="apple-pay-btn" onclick="openPay()">
+        <div class="apple-logo"></div>
+        Pay
+    </button>
+</div>
+
+<!-- Modal -->
+<div id="payModal" class="modal">
+    <div class="modal-inner">
+        <h2>Confirm with Apple Pay</h2>
+        <p style="color:#666; margin-top:-5px;">Slide to complete your purchase</p>
+
+        <div class="slide-bar">
+            <div class="slider" id="slider">➤</div>
+            <div class="slide-text">Slide to Pay</div>
+        </div>
+
+        <p class="success" id="successMsg">Done ✔<br>DM the BeamMP Server Owner.</p>
+    </div>
+</div>
+
+<script>
+    function openPay() {
+        const modal = document.getElementById("payModal");
+        modal.style.display = "flex"; // show modal
+        modal.style.zIndex = 9999; // on top
+    }
+
+    const slider = document.getElementById("slider");
+    const success = document.getElementById("successMsg");
+
+    slider.addEventListener("mousedown", startSlide);
+    slider.addEventListener("touchstart", startSlide);
+
+    function startSlide(e) {
+        e.preventDefault();
+        const bar = slider.parentElement;
+        const barRect = bar.getBoundingClientRect();
+
+        function move(ev) {
+            const x = ev.touches ? ev.touches[0].clientX : ev.clientX;
+            let offset = x - barRect.left - 25;
+
+            if (offset < 0) offset = 0;
+            if (offset > barRect.width - 50) offset = barRect.width - 50;
+
+            slider.style.left = offset + 'px';
+
+            if (offset >= barRect.width - 50) completePayment();
+        }
+
+        function stop() {
+            document.removeEventListener("mousemove", move);
+            document.removeEventListener("touchmove", move);
+            document.removeEventListener("mouseup", stop);
+            document.removeEventListener("touchend", stop);
+        }
+
+        document.addEventListener("mousemove", move);
+        document.addEventListener("touchmove", move);
+        document.addEventListener("mouseup", stop);
+        document.addEventListener("touchend", stop);
+    }
+
+    function completePayment() {
+        slider.style.left = "0px";
+        success.style.display = "block";
+    }
+</script>
+
+</body>
+</html>
